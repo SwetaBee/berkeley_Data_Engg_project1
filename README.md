@@ -48,8 +48,8 @@ SQL query: SELECT count(distinct bike_number)
   |Harry Bridges Plaza (Ferry Building)	|2nd at Townsend	       |6888|
   |Embarcadero at Sansome	|Steuart at Market	               |6874|
   |Townsend at 7th	|San Francisco Caltrain 2 (330 Townsend)	   |6836|
-  
-  
+
+
   
   * SQL query:
   ```
@@ -242,7 +242,9 @@ bq query --use_legacy_sql=false 'SELECT min(start_date)
 
 - Question 3: How many of the bikers above have monthly subcription ?
 
-- Question 4: How does bike rides vary by month (lets say in the year 2015)
+- Question 4: How does bike rides vary by month ?
+
+- Question 5: Which station id's have highest duration of bike rides and compare them with the trip counts with lower duration of bike rides.
 
  
 
@@ -253,6 +255,8 @@ Following are the answers to the above formulated questions:
 ##### Question 1: On an average how many bikes are available at the stations ?
 
   **Answer: Assuming bikes_available_ratio = AVG(bikes_available/(docks_available + bikes_available)), Station_id 91 seems to have lower bikes available where station_id 89 and 62 have higher number of bikes available.**
+  
+
 +------------+-------------------------------------+-----------------------+
 | station_id |                name                 | bikes_available_ratio |
 +------------+-------------------------------------+-----------------------+
@@ -415,7 +419,7 @@ bq query --use_legacy_sql=false '#standardSQL
 > --LIMIT 10;'
 ```  
 
-##### Question 4: Which station id's have highest duration of bike rides and compare them with the trip counts with lower duration of bike rides.
+##### Question 5: Which station id's have highest duration of bike rides and compare them with the trip counts with lower duration of bike rides?
 
  **Answer: When we sort by duration, we see that the highest duration bike rides occured from the station id's 35, 36, 24 and so on, while the lowest duration bike rides occured from station id's. Another observation is when we order them by trip_count, we noticed that the highest trip_count station id's (for example 70, 69, 62 and so on) corrspond with lower duration times. This also validate that the same most popular station from Question 1 are mostly short duration ones. 
   Later in Part 3 (in Project_1.ipynb), I have shown a plot of duration vs trip_count, which shows that short duration trips have higher counts on trips and the counts decline as duration increases. Here, I will recommend that if there are any higher duration trips closer to the popular stations, then the nearby bikers can ride bikes from that station and use them for shorted commute. I have also provided a map to locate the station id's in my Project_1.ipynb.**
