@@ -4,49 +4,65 @@
   This project is about data scientists working for this SF Bikeshare company trying to increase ridership and offer deals. First part of this project was to explore the data. Following are the few questions I tried to answer using BigQuery (GCP). 
 
 - What's the size of this dataset? (i.e., how many trips)
-  **Answer: 983648
-  *SQL query:   SELECT count(*)
+
+ **Answer: 983648**
+```  
+SQL query:   SELECT count(*)
                 FROM `bigquery-public-data.san_francisco.bikeshare_trips`
+```                
 
 
 - What is the earliest start date and time and latest end date and time for a trip?
-  **Answer: 2013-08-29 09:08:00 UTC
-            **2016-08-31 23:48:00 UTC
-  *SQL query: SELECT min(start_date)
+
+  **Answer:2013-08-29 09:08:00   UTC2016-08-31 23:48:00 UTC**
+     
+     
+ ```           
+ *SQL query: SELECT min(start_date)
                 FROM `bigquery-public-data.san_francisco.bikeshare_trips`
-              SELECT max(end_date)
+            SELECT max(end_date)
                 FROM `bigquery-public-data.san_francisco.bikeshare_trips`  
+```
 
 - How many bikes are there?
-  **Answer: 700
-  *SQL query: SELECT count(distinct bike_number)
-                FROM `bigquery-public-data.san_francisco.bikeshare_trips`
-  
+
+**Answer: 700
+
+```
+SQL query: SELECT count(distinct bike_number)
+                FROM `bigquery-publicdata.san_francisco.bikeshare_trips`
+ ``` 
 
   As we dig deeper into the data, we find the most popular places(Counts the same station names) from the Bikeshare trips table. If we consider total number of bikes as (sum of docks available and bikes available) from Bikeshare_status table, 35 total bikes are available at  station id's 90, 91 and 92.Also, using timestamps from Bikeshare trips table we were able to find out that morning (6-9 am) and evening (6-8pm) are when most commuters use bikes. 
 
 
 - Question 1: which trips are most popular?
-  * Answer:
-  start_station_name	end_station_name	                    Count
-  Harry Bridges Plaza (Ferry Building)	Embarcadero at Sansome	9150
-  San Francisco Caltrain 2 (330 Townsend)	Townsend at 7th	    8508
-  2nd at Townsend	Harry Bridges Plaza (Ferry Building)	    7620
-  Harry Bridges Plaza (Ferry Building)	2nd at Townsend	        6888
-  Embarcadero at Sansome	Steuart at Market	                6874
-  Townsend at 7th	San Francisco Caltrain 2 (330 Townsend)	    6836
+
+** Answer:**
+    
+  |start_station_name	|end_station_name                |Count|
+  |     ---              |         ---                       |      |
+  |Harry Bridges Plaza (Ferry Building)	|Embarcadero at Sansome|9150
+  |San Francisco Caltrain 2 (330 Townsend)	|Townsend at 7th	   |8508|
+  |2nd at Townsend	|Harry Bridges Plaza (Ferry Building)	   |7620|
+  |Harry Bridges Plaza (Ferry Building)	|2nd at Townsend	       |6888|
+  |Embarcadero at Sansome	|Steuart at Market	               |6874|
+  |Townsend at 7th	|San Francisco Caltrain 2 (330 Townsend)	   |6836|
   
   
   
   * SQL query:
+  ```
    SELECT start_station_name, end_station_name, COUNT(*) AS Count
     FROM `bigquery-public-data.san_francisco.bikeshare_trips`
     GROUP BY start_station_name, end_station_name
     ORDER BY Count DESC
     LIMIT 10;
-
+   ```
+   
 - Question 2: what are the most bikes available at station id's 91, 90, and 92?
   * Answer: Assuming that total bikes are sum of docks available and bikes available on trip, we get
+  
    station_id	total_bikes	  time
         91	35	2016-08-28 12:05:47+00:00
         91	35	2016-08-28 00:37:01+00:00
@@ -54,22 +70,31 @@
         91	35	2016-08-29 14:56:00+00:00
         91	35	2016-08-27 04:11:49+00:00
         91	35	2016-08-25 10:35:46+00:00
+        
   * SQL query:
+  
+  ```
    #standardSQL
     SELECT station_id, (docks_available + bikes_available) AS total_bikes, time
     FROM `bigquery-public-data.san_francisco.bikeshare_status`
     WHERE station_id IN (90, 91, 92)
     ORDER BY total_bikes desc
     LIMIT 10
-  
+   ```
+   
+ 
  - Question 3: what time of the day has the highest count of bike rides at station 70?
   * Answer:
-    Count   Hour
-    20205	7
-    26843	8
-    12989	9
+  
+    Count |  Hour
+    ---   |   ---
+    20205	|7
+    26843	|8
+    12989	|9
   
   * SQL query:
+  
+```
      #standardSQL
     SELECT COUNT(*) as Count,
     EXTRACT(HOUR FROM start_date) AS hour
@@ -79,8 +104,7 @@
     ORDER BY hour ASC
     LIMIT 100;
 
-
-
+```
 
 
 ## Part 2 - Querying data from the BigQuery CLI 
@@ -105,17 +129,26 @@ We performed the same question in command line and obtained same results.
 
   
 1.  What's the size of this dataset? (i.e., how many trips)
-  **Answer: 
+
+  **Answer:**
+
 +--------+
 |  f0_   |
 +--------+
 | 983648 |
 +--------+
-  *SQL query:   bq query --use_legacy_sql=false 'SELECT count(*)>                 
-  FROM `bigquery-public-data.san_francisco.bikeshare_trips`'
 
-2.  * What is the earliest start time and latest end time for a trip?
-  **Answer:
+  *SQL query:   
+  
+  ```
+  bq query --use_legacy_sql=false 'SELECT count(*)>                 
+  FROM `bigquery-public-data.san_francisco.bikeshare_trips`'
+  ```
+
+2.  What is the earliest start time and latest end time for a trip?
+
+  **Answer:**
+  
 +---------------------+   
 |         f0_         |
 +---------------------+
@@ -126,28 +159,38 @@ We performed the same question in command line and obtained same results.
 | 2013-08-29 09:08:00 |
 +---------------------+
 
-   *SQL query:   bq query --use_legacy_sql=false 'SELECT min(start_date)
+
+   *SQL query:  
+   
+```   
+bq query --use_legacy_sql=false 'SELECT min(start_date)
                  FROM `bigquery-public-data.san_francisco.bikeshare_trips`'
                  bq query --use_legacy_sql=false 'SELECT max(end_date)
                  FROM `bigquery-public-data.san_francisco.bikeshare_trips`'
+  ```
    
-3.  * How many bikes are there?
+3.   How many bikes are there?
   
-  **Answer: 
+  **Answer:**
 +-----+
 | f0_ |
 +-----+
 | 700 |
 +-----+
 
-   *SQL query:
+ *SQL query:
+   
+```   
    bq query --use_legacy_sql=false 'SELECT count(distinct bike_number)
    FROM `bigquery-public-data.san_francisco.bikeshare_trips`'
+```
 
 2. More data exploratory questions in order to recommend some offers to generate more revenue.
 
-  * How many trips are in the morning vs in the afternoon?
-**Answer    There are about 30,000 trips in the morning (5-9am) vs about 37000 trips in the evening (4-9pm). While most trips are around 8am in the morning, most trips in the evening are about at 5pm. Here , my assumption is morning is from 5-9 am and evening is from 4-9 pm.
+  * How many trips are in the morning vs in the afternoon? *
+  
+**Answer:**    There are about 30,000 trips in the morning (5-9am) vs about 37000 trips in the evening (4-9pm). While most trips are around 8am in the morning, most trips in the evening are about at 5pm. Here , my assumption is morning is from 5-9 am and evening is from 4-9 pm.
+
 +--------+------+  
 | Count  | hour |
 +--------+------+
@@ -167,7 +210,9 @@ We performed the same question in command line and obtained same results.
 |   5098 |    5 |
 +--------+------+
 
-**The SQL query is:
+*The SQL query is:
+
+```
     bq query --use_legacy_sql=false '#standardSQL
 > SELECT COUNT(*) as Count,
 > EXTRACT(HOUR FROM start_date) AS hour
@@ -184,6 +229,8 @@ We performed the same question in command line and obtained same results.
 > GROUP BY hour
 > ORDER BY Count DESC
 > LIMIT 10;'
+
+```
 
 ### Project Questions
 
@@ -203,9 +250,9 @@ We performed the same question in command line and obtained same results.
 
 Following are the answers to the above formulated questions:
 
-###### Question 1: On an average how many bikes are available at the stations ?
+##### Question 1: On an average how many bikes are available at the stations ?
 
-  **Answer: Assuming bikes_available_ratio = AVG(bikes_available/(docks_available + bikes_available)), Station_id 91 seems to have lower bikes available where station_id 89 and 62 have higher number of bikes available.
+  **Answer: Assuming bikes_available_ratio = AVG(bikes_available/(docks_available + bikes_available)), Station_id 91 seems to have lower bikes available where station_id 89 and 62 have higher number of bikes available.**
 +------------+-------------------------------------+-----------------------+
 | station_id |                name                 | bikes_available_ratio |
 +------------+-------------------------------------+-----------------------+
@@ -223,7 +270,9 @@ Following are the answers to the above formulated questions:
   
 
 
-  **SQL query:
+  *SQL query:
+  
+  ```
   #standardSQL
     SELECT bikeshare_status.station_id,bikeshare_stations.name, AVG(bikes_available/(docks_available + bikes_available))  AS   bikes_available_ratio --/(docks_available + bikes_available)
     FROM `bigquery-public-data.san_francisco.bikeshare_status` AS bikeshare_status
@@ -233,12 +282,13 @@ Following are the answers to the above formulated questions:
     GROUP BY bikeshare_status.station_id, bikeshare_stations.name
     ORDER BY bikes_available_ratio ASC  
     LIMIT 100
+```
 
-###### Question 2: What is the number of trips from different start_station_id ? (Any relation with answer from Question 1 ?)
+##### Question 2: What is the number of trips from different start_station_id ? (Any relation with answer from Question 1 ?)
 
 
 **Answer: Below we see that station_id 88,91,89 and so on from the top table and the first few stations are not so busy. However, the lower table shows higher counts of start_station_id's. 
-          The relation with the first table is that some station_id's like 62 are busy (maybe because of its location). Also, from Question 1. we noticed this station has high bike availability. So, if we can inform bikers about these station id's with high bike availability, it might increase sales.
+          The relation with the first table is that some station_id's like 62 are busy (maybe because of its location). Also, from Question 1. we noticed this station has high bike availability. So, if we can inform bikers about these station id's with high bike availability, it might increase sales.**
   
 +------------+------------------+-----------------------------------------------+-------+
 | station_id | start_station_id |                     name                      | Count |
@@ -269,7 +319,9 @@ Following are the answers to the above formulated questions:
 |         70 |               70 | San Francisco Caltrain (Townsend at 4th)      | 72683 |
 
 
-  **SQL query:
+  *SQL query:
+  
+  ```
     SELECT station_id, start_station_id, name, COUNT(*) AS Count, --subscriber_type,  --end_station_name
     FROM `bigquery-public-data.san_francisco.bikeshare_trips` AS bikeshare_trips
     LEFT OUTER JOIN `bigquery-public-data.san_francisco.bikeshare_stations` AS bikeshare_stations
@@ -278,10 +330,11 @@ Following are the answers to the above formulated questions:
     GROUP BY station_id, start_station_id, name --subscriber_type  --, end_station_name
     ORDER BY Count DESC
     LIMIT 100;
+```
 
-###### Question 3: How many of the bikers above have monthly subcription ?
+#### Question 3: How many of the bikers above have monthly subcription ?
 
- **Answer:We notice below that most bikers who go to the busy station_id's with high count are subscribers. However as you go down the list the number of subscribers decrease and we see increasing number of customers. Notice that there are abunch of bikers who are customers who start from station_id 62. My recommendation would also be to send deals to these customers and attract them as subscribers.
+ **Answer:We notice below that most bikers who go to the busy station_id's with high count are subscribers. However as you go down the list the number of subscribers decrease and we see increasing number of customers. Notice that there are abunch of bikers who are customers who start from station_id 62. My recommendation would also be to send deals to these customers and attract them as subscribers.**
   
   +------------+------------------+-----------------------------------------------+-------+-----------------+
 | station_id | start_station_id |                     name                      | Count | subscriber_type |
@@ -314,8 +367,9 @@ Following are the answers to the above formulated questions:
 |          3 |                3 | San Jose Civic Center                         |  1176 | Customer        |
 
 
- **SQL query:
-  
+ *SQL query:
+ 
+ ```
   bq query --use_legacy_sql=false 'SELECT station_id, start_station_id, name, COUNT(*) AS Count, subscriber_type,  --end_station_name
 > FROM `bigquery-public-data.san_francisco.bikeshare_trips` AS bikeshare_trips
 > LEFT OUTER JOIN `bigquery-public-data.san_francisco.bikeshare_stations` AS bikeshare_stations
@@ -324,10 +378,11 @@ Following are the answers to the above formulated questions:
 > GROUP BY station_id, start_station_id, name, subscriber_type  --, end_station_name
 > ORDER BY Count DESC
 > LIMIT 100;'
+  ```
   
-###### Question 4: How does bike rides vary by month?
+##### Question 4: How does bike rides vary by month?
 
-  **Answer: Most popular months are August, October, july while the months when we see least bikers are December, January and February. It can be because daily commuters to office via train-stations, ferry, etc. are fewer due to vacations.In order to increase sales, my recommendation would be to give some sort of discount in those months, so people bike more. For example, attract bikers to go on long duration leisure trips in those months. Although we are showing only one result we have experimented all the years individually. 
+  **Answer: Most popular months are August, October, july while the months when we see least bikers are December, January and February. It can be because daily commuters to office via train-stations, ferry, etc. are fewer due to vacations.In order to increase sales, my recommendation would be to give some sort of discount in those months, so people bike more. For example, attract bikers to go on long duration leisure trips in those months. Although we are showing only one result we have experimented all the years individually.** 
   
   +-------+-------+
 | Count | month |
@@ -346,8 +401,9 @@ Following are the answers to the above formulated questions:
 | 57961 |    12 |
 +-------+-------+
   
- **SQL query:
+ *SQL query:
  
+ ```
 bq query --use_legacy_sql=false '#standardSQL
 > SELECT COUNT(trip_id) as Count,
 > EXTRACT (MONTH FROM start_date) AS month,
@@ -357,12 +413,12 @@ bq query --use_legacy_sql=false '#standardSQL
 > GROUP BY month --, year
 > ORDER BY Count DESC
 > --LIMIT 10;'
-  
+```  
 
-###### Question 4: Which station id's have highest duration of bike rides and compare them with the trip counts with lower duration of bike rides.
+##### Question 4: Which station id's have highest duration of bike rides and compare them with the trip counts with lower duration of bike rides.
 
  **Answer: When we sort by duration, we see that the highest duration bike rides occured from the station id's 35, 36, 24 and so on, while the lowest duration bike rides occured from station id's. Another observation is when we order them by trip_count, we noticed that the highest trip_count station id's (for example 70, 69, 62 and so on) corrspond with lower duration times. This also validate that the same most popular station from Question 1 are mostly short duration ones. 
-  Later in Part 3 (in Project_1.ipynb), I have shown a plot of duration vs trip_count, which shows that short duration trips have higher counts on trips and the counts decline as duration increases. Here, I will recommend that if there are any higher duration trips closer to the popular stations, then the nearby bikers can ride bikes from that station and use them for shorted commute. I have also provided a map to locate the station id's in my Project_1.ipynb.
+  Later in Part 3 (in Project_1.ipynb), I have shown a plot of duration vs trip_count, which shows that short duration trips have higher counts on trips and the counts decline as duration increases. Here, I will recommend that if there are any higher duration trips closer to the popular stations, then the nearby bikers can ride bikes from that station and use them for shorted commute. I have also provided a map to locate the station id's in my Project_1.ipynb.**
 
 +------------------+------------+--------------------+
 | start_station_id | trip_count | duration_sec_mean  |
@@ -392,16 +448,16 @@ bq query --use_legacy_sql=false '#standardSQL
 |               90 |        173 |  554.8959537572254 |
 +------------------+------------+--------------------+
 
- **SQL query:
+ *SQL query:
  
+ ```
  SELECT start_station_id, count(*) AS trip_count, AVG(duration_sec) AS duration_sec_mean
  FROM `bigquery-public-data.san_francisco.bikeshare_trips`
  GROUP BY start_station_id
  ORDER BY duration_sec_mean DESC 
  LIMIT 1000
 
-
-
+```
 
 ## Part 3 - Employ notebooks to synthesize query project results
 
