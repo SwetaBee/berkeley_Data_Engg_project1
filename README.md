@@ -1,178 +1,116 @@
-# Project 1: Query Project
+# Project 1: SF Bikeshare Project
 
-- In the Query Project, you will get practice with SQL while learning about
-  Google Cloud Platform (GCP) and BiqQuery. You'll answer business-driven
-  questions using public datasets housed in GCP. To give you experience with
-  different ways to use those datasets, you will use the web UI (BiqQuery) and
-  the command-line tools, and work with them in Jupyter Notebooks.
-
-#### Problem Statement
-
-- You're a data scientist at Lyft Bay Wheels (https://www.lyft.com/bikes/bay-wheels), formerly known as Ford GoBike, the
-  company running Bay Area Bikeshare. You are trying to increase ridership, and
-  you want to offer deals through the mobile app to do so. 
-  
-- What deals do you offer though? Currently, your company has several options which can change over time.  Please visit the website to see the current offers and other marketing information. Frequent offers include: 
-  * Single Ride 
-  * Monthly Membership
-  * Annual Membership
-  * Bike Share for All
-  * Access Pass
-  * Corporate Membership
-  * etc.
-
-- Through this project, you will answer these questions: 
-
-  * What are the 5 most popular trips that you would call "commuter trips"? 
-  
-  * What are your recommendations for offers (justify based on your findings)?
-
-- Please note that there are no exact answers to the above questions, just like in the proverbial real world.  This is not a simple exercise where each question above will have a simple SQL query. It is an exercise in analytics over inexact and dirty data. 
-
-- You won't find a column in a table labeled "commuter trip".  You will find you need to do quite a bit of data exploration using SQL queries to determine your own definition of a communter trip.  In data exploration process, you will find a lot of dirty data, that you will need to either clean or filter out. You will then write SQL queries to find the communter trips.
-
-- Likewise to make your recommendations, you will need to do data exploration, cleaning or filtering dirty data, etc. to come up with the final queries that will give you the supporting data for your recommendations. You can make any recommendations regarding the offers, including, but not limited to: 
-  * market offers differently to generate more revenue 
-  * remove offers that are not working 
-  * modify exising offers to generate more revenue
-  * create new offers for hidden business opportunities you have found
-  * etc. 
-
-#### All Work MUST be done in the Google Cloud Platform (GCP) / The Majority of Work MUST be done using BigQuery SQL / Usage of Temporary Tables, Views, Pandas, Data Visualizations
-
-A couple of the goals of w205 are for students to learn how to work in a cloud environment (such as GCP) and how to use SQL against a big data data platform (such as Google BigQuery).  In keeping with these goals, please do all of your work in GCP, and the majority of your analytics work using BigQuery SQL queries.
-
-You can make intermediate temporary tables or views in your own dataset in BigQuery as you like.  Actually, this is a great way to work!  These make data exploration much easier.  It's much easier when you have made temporary tables or views with only clean data, filtered rows, filtered columns, new columns, summary data, etc.  If you use intermediate temporary tables or views, you should include the SQL used to create these, along with a brief note mentioning that you used the temporary table or view.
-
-In the final Jupyter Notebook, the results of your BigQuery SQL will be read into Pandas, where you will use the skills you learned in the Python class to print formatted Pandas tables, simple data visualizations using Seaborn / Matplotlib, etc.  You can use Pandas for simple transformations, but please remember the bulk of work should be done using Google BigQuery SQL.
-
-#### GitHub Procedures
-
-In your Python class you used GitHub, with a single repo for all assignments, where you committed without doing a pull request.  In this class, we will try to mimic the real world more closely, so our procedures will be enhanced. 
-
-Each project, including this one, will have it's own repo.
-
-Important:  In w205, please never merge your assignment branch to the master branch. 
-
-Using the git command line: clone down the repo, leave the master branch untouched, create an assignment branch, and move to that branch:
-- Open a linux command line to your virtual machine and be sure you are logged in as jupyter.
-- Create a ~/w205 directory if it does not already exist `mkdir ~/w205`
-- Change directory into the ~/w205 directory `cd ~/w205`
-- Clone down your repo `git clone <https url for your repo>`
-- Change directory into the repo `cd <repo name>`
-- Create an assignment branch `git branch assignment`
-- Checkout the assignment branch `git checkout assignment`
-
-The previous steps only need to be done once.  Once you your clone is on the assignment branch it will remain on that branch unless you checkout another branch.
-
-The project workflow follows this pattern, which may be repeated as many times as needed.  In fact it's best to do this frequently as it saves your work into GitHub in case your virtual machine becomes corrupt:
-- Make changes to existing files as needed.
-- Add new files as needed
-- Stage modified files `git add <filename>`
-- Commit staged files `git commit -m "<meaningful comment about your changes>"`
-- Push the commit on your assignment branch from your clone to GitHub `git push origin assignment`
-
-Once you are done, go to the GitHub web interface and create a pull request comparing the assignment branch to the master branch.  Add your instructor, and only your instructor, as the reviewer.  The date and time stamp of the pull request is considered the submission time for late penalties. 
-
-If you decide to make more changes after you have created a pull request, you can simply close the pull request (without merge!), make more changes, stage, commit, push, and create a final pull request when you are done.  Note that the last data and time stamp of the last pull request will be considered the submission time for late penalties.
-
-Make sure you receive the emails related to your repository! Your project feedback will be given as comment on the pull request. When you receive the feedback, you can address problems or simply comment that you have read the feedback. 
-AFTER receiving and answering the feedback, merge you PR to master. Your project only counts as complete once this is done.
-
----
-
-## Parts 1, 2, 3
-
-We have broken down this project into 3 parts, about 1 week's work each to help you stay on track.
-
-**You will only turn in the project once at the end of part 3!**
-
-- In Part 1, we will query using the Google BigQuery GUI interface in the cloud.
-
-- In Part 2, we will query using the Linux command line from our virtual machine in the cloud.
-
-- In Part 3, we will query from a Jupyter Notebook in our virtual machine in the cloud, save the results into Pandas, and present a report enhanced by Pandas output tables and simple data visualizations using Seaborn / Matplotlib.
-
----
-
-## Part 1 - Querying Data with BigQuery
-
-### SQL Tutorial
-
-Please go through this SQL tutorial to help you learn the basics of SQL to help you complete this project.
-
-SQL tutorial: https://www.w3schools.com/sql/default.asp
-
-### Google Cloud Helpful Links
-
-Read: https://cloud.google.com/docs/overview/
-
-BigQuery: https://cloud.google.com/bigquery/
-
-Public Datasets: Bring up your Google BigQuery console, open the menu for the public datasets, and navigate to the the dataset san_francisco.
-
-- The Bay Bike Share has two datasets: a static one and a dynamic one.  The static one covers an historic period of about 3 years.  The dynamic one updates every 10 minutes or so.  THE STATIC ONE IS THE ONE WE WILL USE IN CLASS AND IN THE PROJECT. The reason is that is much easier to learn SQL against a static target instead of a moving target.
-
-- (USE THESE TABLES!) The static tables we will be using in this class are in the dataset **san_francisco** :
-
-  * bikeshare_stations
-
-  * bikeshare_status
-
-  * bikeshare_trips
-
-- The dynamic tables are found in the dataset **san_francisco_bikeshare**
-
-### Some initial queries
-
-Paste your SQL query and answer the question in a sentence.  Be sure you properly format your queries and results using markdown. 
+## Part 1:
+  This project is about data scientists working for this SF Bikeshare company trying to increase ridership and offer deals. First part of this project was to explore the data. Following are the few questions I tried to answer using BigQuery (GCP). 
 
 - What's the size of this dataset? (i.e., how many trips)
 
+ **Answer: 983648**
+```  
+SQL query:   SELECT count(*)
+                FROM `bigquery-public-data.san_francisco.bikeshare_trips`
+```                
+
+
 - What is the earliest start date and time and latest end date and time for a trip?
+
+  **Answer:2013-08-29 09:08:00   UTC2016-08-31 23:48:00 UTC**
+     
+     
+ ```           
+ *SQL query: SELECT min(start_date)
+                FROM `bigquery-public-data.san_francisco.bikeshare_trips`
+            SELECT max(end_date)
+                FROM `bigquery-public-data.san_francisco.bikeshare_trips`  
+```
 
 - How many bikes are there?
 
+**Answer: 700
 
-### Questions of your own
-- Make up 3 questions and answer them using the Bay Area Bike Share Trips Data.  These questions MUST be different than any of the questions and queries you ran above.
+```
+SQL query: SELECT count(distinct bike_number)
+                FROM `bigquery-publicdata.san_francisco.bikeshare_trips`
+ ``` 
 
-- Question 1: 
-  * Answer:
+  As we dig deeper into the data, we find the most popular places(Counts the same station names) from the Bikeshare trips table. If we consider total number of bikes as (sum of docks available and bikes available) from Bikeshare_status table, 35 total bikes are available at  station id's 90, 91 and 92.Also, using timestamps from Bikeshare trips table we were able to find out that morning (6-9 am) and evening (6-8pm) are when most commuters use bikes. 
+
+
+- Question 1: which trips are most popular?
+
+** Answer:**
+    
+  |start_station_name	|end_station_name                |Count|
+  |     ---              |         ---                       |      |
+  |Harry Bridges Plaza (Ferry Building)	|Embarcadero at Sansome|9150
+  |San Francisco Caltrain 2 (330 Townsend)	|Townsend at 7th	   |8508|
+  |2nd at Townsend	|Harry Bridges Plaza (Ferry Building)	   |7620|
+  |Harry Bridges Plaza (Ferry Building)	|2nd at Townsend	       |6888|
+  |Embarcadero at Sansome	|Steuart at Market	               |6874|
+  |Townsend at 7th	|San Francisco Caltrain 2 (330 Townsend)	   |6836|
+
+
+  
   * SQL query:
-
-- Question 2:
-  * Answer:
+  ```
+   SELECT start_station_name, end_station_name, COUNT(*) AS Count
+    FROM `bigquery-public-data.san_francisco.bikeshare_trips`
+    GROUP BY start_station_name, end_station_name
+    ORDER BY Count DESC
+    LIMIT 10;
+   ```
+   
+- Question 2: what are the most bikes available at station id's 91, 90, and 92?
+  * Answer: Assuming that total bikes are sum of docks available and bikes available on trip, we get
+  
+   station_id	total_bikes	  time
+        91	35	2016-08-28 12:05:47+00:00
+        91	35	2016-08-28 00:37:01+00:00
+        91	35	2016-08-28 06:00:48+00:00
+        91	35	2016-08-29 14:56:00+00:00
+        91	35	2016-08-27 04:11:49+00:00
+        91	35	2016-08-25 10:35:46+00:00
+        
   * SQL query:
-
-- Question 3:
+  
+  ```
+   #standardSQL
+    SELECT station_id, (docks_available + bikes_available) AS total_bikes, time
+    FROM `bigquery-public-data.san_francisco.bikeshare_status`
+    WHERE station_id IN (90, 91, 92)
+    ORDER BY total_bikes desc
+    LIMIT 10
+   ```
+   
+ 
+ - Question 3: what time of the day has the highest count of bike rides at station 70?
   * Answer:
+  
+    Count |  Hour
+    ---   |   ---
+    20205	|7
+    26843	|8
+    12989	|9
+  
   * SQL query:
+  
+```
+     #standardSQL
+    SELECT COUNT(*) as Count,
+    EXTRACT(HOUR FROM start_date) AS hour
+    FROM `bigquery-public-data.san_francisco.bikeshare_trips` AS bikeshare_trips
+    WHERE start_station_id = 70 OR end_station_id = 70
+    GROUP BY hour
+    ORDER BY hour ASC
+    LIMIT 100;
 
-### Bonus activity queries (optional - not graded - just this section is optional, all other sections are required)
-
-The bike share dynamic dataset offers multiple tables that can be joined to learn more interesting facts about the bike share business across all regions. These advanced queries are designed to challenge you to explore the other tables, using only the available metadata to create views that give you a broader understanding of the overall volumes across the regions(each region has multiple stations)
-
-We can create a temporary table or view against the dynamic dataset to join to our static dataset.
-
-Here is some SQL to pull the region_id and station_id from the dynamic dataset.  You can save the results of this query to a temporary table or view.  You can then join the static tables to this table or view to find the region:
-```sql
-#standardSQL
-select distinct region_id, station_id
-from `bigquery-public-data.san_francisco_bikeshare.bikeshare_station_info`
 ```
 
-- Top 5 popular station pairs in each region
-
-- Top 3 most popular regions(stations belong within 1 region)
-
-- Total trips for each short station name in each region
-
-- What are the top 10 used bikes in each of the top 3 region. these bikes could be in need of more frequent maintenance.
-
----
 
 ## Part 2 - Querying data from the BigQuery CLI 
+
+In this part, we are doing more data exploration using Bigquery command line (from GCP Notebook Terminal). 
+The command to use is as follows:
 
 - Use BQ from the Linux command line:
 
@@ -185,122 +123,363 @@ from `bigquery-public-data.san_francisco_bikeshare.bikeshare_station_info`
            `bigquery-public-data.san_francisco.bikeshare_trips`'
     ```
 
-### Queries
+### Project 1(part 2)
 
-1. Rerun the first 3 queries from Part 1 using bq command line tool (Paste your bq
-   queries and results here, using properly formatted markdown):
+We performed the same question in command line and obtained same results.
 
-  * What's the size of this dataset? (i.e., how many trips)
+  
+1.  What's the size of this dataset? (i.e., how many trips)
 
-  * What is the earliest start time and latest end time for a trip?
+  **Answer:**
 
-  * How many bikes are there?
++--------+
+|  f0_   |
++--------+
+| 983648 |
++--------+
 
-2. New Query (Run using bq and paste your SQL query and answer the question in a sentence, using properly formatted markdown):
+  *SQL query:   
+  
+  ```
+  bq query --use_legacy_sql=false 'SELECT count(*)>                 
+  FROM `bigquery-public-data.san_francisco.bikeshare_trips`'
+  ```
 
-  * How many trips are in the morning vs in the afternoon?
+2.  What is the earliest start time and latest end time for a trip?
 
+  **Answer:**
+  
++---------------------+   
+|         f0_         |
++---------------------+
+| 2016-08-31 23:48:00 |
++---------------------+ 
+|         f0_         |
++---------------------+
+| 2013-08-29 09:08:00 |
++---------------------+
+
+
+   *SQL query:  
+   
+```   
+bq query --use_legacy_sql=false 'SELECT min(start_date)
+                 FROM `bigquery-public-data.san_francisco.bikeshare_trips`'
+                 bq query --use_legacy_sql=false 'SELECT max(end_date)
+                 FROM `bigquery-public-data.san_francisco.bikeshare_trips`'
+  ```
+   
+3.   How many bikes are there?
+  
+  **Answer:**
++-----+
+| f0_ |
++-----+
+| 700 |
++-----+
+
+ *SQL query:
+   
+```   
+   bq query --use_legacy_sql=false 'SELECT count(distinct bike_number)
+   FROM `bigquery-public-data.san_francisco.bikeshare_trips`'
+```
+
+2. More data exploratory questions in order to recommend some offers to generate more revenue.
+
+  * How many trips are in the morning vs in the afternoon? *
+  
+**Answer:**    There are about 30,000 trips in the morning (5-9am) vs about 37000 trips in the evening (4-9pm). While most trips are around 8am in the morning, most trips in the evening are about at 5pm. Here , my assumption is morning is from 5-9 am and evening is from 4-9 pm.
+
++--------+------+  
+| Count  | hour |
++--------+------+
+| 129072 |   17 |
+|  96317 |   18 |
+|  81238 |   16 |
+|  47273 |   19 |
+|  25371 |   20 |
+|  16571 |   21 |
++--------+------+
+| Count  | hour |
++--------+------+
+| 132464 |    8 |
+|  96118 |    9 |
+|  67531 |    7 |
+|  20519 |    6 |
+|   5098 |    5 |
++--------+------+
+
+*The SQL query is:
+
+```
+    bq query --use_legacy_sql=false '#standardSQL
+> SELECT COUNT(*) as Count,
+> EXTRACT(HOUR FROM start_date) AS hour
+> FROM `bigquery-public-data.san_francisco.bikeshare_trips` AS bikeshare_trips
+> WHERE EXTRACT(HOUR FROM start_date) > 4 AND EXTRACT(HOUR FROM start_date) < 10
+> GROUP BY hour
+> ORDER BY Count DESC
+> LIMIT 10;'
+   bq query --use_legacy_sql=false '#standardSQL
+> SELECT COUNT(*) as Count,
+> EXTRACT(HOUR FROM end_date) AS hour
+> FROM `bigquery-public-data.san_francisco.bikeshare_trips` AS bikeshare_trips
+> WHERE EXTRACT(HOUR FROM end_date) > 15 AND EXTRACT(HOUR FROM end_date) < 22
+> GROUP BY hour
+> ORDER BY Count DESC
+> LIMIT 10;'
+
+```
 
 ### Project Questions
-Identify the main questions you'll need to answer to make recommendations (list
-below, add as many questions as you need).
 
-- Question 1: 
+ Here, I have identified the main questions in order to make recommendations for the company.
 
-- Question 2: 
+- Question 1: On an average how many bikes are available at the stations ? 
 
-- Question 3: 
+- Question 2: What is the number of trips from different start_station_id ? (Any relation with answer from Question 1 ?)
 
-- Question 4: 
+- Question 3: How many of the bikers above have monthly subcription ?
 
-- ...
+- Question 4: How does bike rides vary by month ?
 
-- Question n: 
+- Question 5: Which station id's have highest duration of bike rides and compare them with the trip counts with lower duration of bike rides.
+
+ 
 
 ### Answers
 
-Answer at least 4 of the questions you identified above You can use either
-BigQuery or the bq command line tool.  Paste your questions, queries and
-answers below.
+Following are the answers to the above formulated questions:
 
-- Question 1: 
-  * Answer:
-  * SQL query:
+##### Question 1: On an average how many bikes are available at the stations ?
 
-- Question 2:
-  * Answer:
-  * SQL query:
-
-- Question 3:
-  * Answer:
-  * SQL query:
+  **Answer: Assuming bikes_available_ratio = AVG(bikes_available/(docks_available + bikes_available)), Station_id 91 seems to have lower bikes available where station_id 89 and 62 have higher number of bikes available.**
   
-- Question 4:
-  * Answer:
-  * SQL query:
+
++------------+-------------------------------------+-----------------------+
+| station_id |                name                 | bikes_available_ratio |
++------------+-------------------------------------+-----------------------+
+|         91 | Cyril Magnin St at Ellis St         |   0.14695737361857836 |
+|         89 | S. Market st at Park Ave            |   0.30160449210702905 |
+|         62 | 2nd at Folsom                       |   0.31730670454313453 |
+|         45 | Commercial at Montgomery            |   0.36907135416388387 |
+|         59 | Golden Gate at Polk                 |   0.36958571200012047 |
+|         67 | Market at 10th                      |    0.3735728731298074 |
+|         47 | Post at Kearney                     |    0.3804489008023759 |
+|         75 | Mechanics Plaza (Market at Battery) |     0.388842355551464 |
+|         51 | Embarcadero at Folsom               |   0.39817583213447266 |
+|         41 | Clay at Battery                     |    0.4010513646334307 |
+|         56 | Beale at Market                     |    0.4011616272454333 |
   
-- ...
 
-- Question n:
-  * Answer:
-  * SQL query:
 
----
+  *SQL query:
+  
+  ```
+  #standardSQL
+    SELECT bikeshare_status.station_id,bikeshare_stations.name, AVG(bikes_available/(docks_available + bikes_available))  AS   bikes_available_ratio --/(docks_available + bikes_available)
+    FROM `bigquery-public-data.san_francisco.bikeshare_status` AS bikeshare_status
+    LEFT OUTER JOIN `bigquery-public-data.san_francisco.bikeshare_stations` AS bikeshare_stations
+    ON bikeshare_status.station_id = bikeshare_stations.station_id
+    WHERE (docks_available + bikes_available) > 0
+    GROUP BY bikeshare_status.station_id, bikeshare_stations.name
+    ORDER BY bikes_available_ratio ASC  
+    LIMIT 100
+```
+
+##### Question 2: What is the number of trips from different start_station_id ? (Any relation with answer from Question 1 ?)
+
+
+**Answer: Below we see that station_id 88,91,89 and so on from the top table and the first few stations are not so busy. However, the lower table shows higher counts of start_station_id's. 
+          The relation with the first table is that some station_id's like 62 are busy (maybe because of its location). Also, from Question 1. we noticed this station has high bike availability. So, if we can inform bikers about these station id's with high bike availability, it might increase sales.**
+  
++------------+------------------+-----------------------------------------------+-------+
+| station_id | start_station_id |                     name                      | Count |
++------------+------------------+-----------------------------------------------+-------+
+|         88 |               88 | 5th S. at E. San Salvador St                  |    20 |
+|         91 |               91 | Cyril Magnin St at Ellis St                   |    69 |
+|         89 |               89 | S. Market st at Park Ave                      |    84 |
+|         90 |               90 | 5th St at Folsom St                           |   173 |
+|         21 |               21 | Franklin at Maple                             |   241 |
+|         24 |               24 | Redwood City Public Library                   |   272 |
+|         23 |               23 | San Mateo County Center                       |   373 |
+
+
+|         56 |               56 | Beale at Market                               | 23082 |
+|         62 |               62 | 2nd at Folsom                                 | 23404 |
+|         39 |               39 | Powell Street BART                            | 25204 |
+|         64 |               64 | 2nd at South Park                             | 26218 |
+|         76 |               76 | Market at 4th                                 | 27502 |
+|         67 |               67 | Market at 10th                                | 30209 |
+|         65 |               65 | Townsend at 7th                               | 34894 |
+|         77 |               77 | Market at Sansome                             | 35142 |
+|         74 |               74 | Steuart at Market                             | 38531 |
+|         55 |               55 | Temporary Transbay Terminal (Howard at Beale) | 39200 |
+|         61 |               61 | 2nd at Townsend                               | 39936 |
+|         60 |               60 | Embarcadero at Sansome                        | 41137 |
+|         50 |               50 | Harry Bridges Plaza (Ferry Building)          | 49062 |
+|         69 |               69 | San Francisco Caltrain 2 (330 Townsend)       | 56100 |
+|         70 |               70 | San Francisco Caltrain (Townsend at 4th)      | 72683 |
+
+
+  *SQL query:
+  
+  ```
+    SELECT station_id, start_station_id, name, COUNT(*) AS Count, --subscriber_type,  --end_station_name
+    FROM `bigquery-public-data.san_francisco.bikeshare_trips` AS bikeshare_trips
+    LEFT OUTER JOIN `bigquery-public-data.san_francisco.bikeshare_stations` AS bikeshare_stations
+    ON bikeshare_trips.start_station_id = bikeshare_stations.station_id
+    WHERE start_station_id = station_id
+    GROUP BY station_id, start_station_id, name --subscriber_type  --, end_station_name
+    ORDER BY Count DESC
+    LIMIT 100;
+```
+
+#### Question 3: How many of the bikers above have monthly subcription ?
+
+ **Answer:We notice below that most bikers who go to the busy station_id's with high count are subscribers. However as you go down the list the number of subscribers decrease and we see increasing number of customers. Notice that there are abunch of bikers who are customers who start from station_id 62. My recommendation would also be to send deals to these customers and attract them as subscribers.**
+  
+  +------------+------------------+-----------------------------------------------+-------+-----------------+
+| station_id | start_station_id |                     name                      | Count | subscriber_type |
++------------+------------------+-----------------------------------------------+-------+-----------------+
+|         70 |               70 | San Francisco Caltrain (Townsend at 4th)      | 68384 | Subscriber      |
+|         69 |               69 | San Francisco Caltrain 2 (330 Townsend)       | 53694 | Subscriber      |
+|         55 |               55 | Temporary Transbay Terminal (Howard at Beale) | 37888 | Subscriber      |
+|         50 |               50 | Harry Bridges Plaza (Ferry Building)          | 36621 | Subscriber      |
+|         61 |               61 | 2nd at Townsend                               | 35500 | Subscriber      |
+|         74 |               74 | Steuart at Market                             | 34062 | Subscriber      |
+|         65 |               65 | Townsend at 7th                               | 32788 | Subscriber      |
+
+
+|          8 |                8 | San Salvador at 1st                           |  1777 | Subscriber      |
+|         58 |               58 | San Francisco City Hall                       |  1755 | Customer        |
+|         37 |               37 | Cowper at University                          |  1713 | Subscriber      |
+|         63 |               63 | Howard at 2nd                                 |  1708 | Customer        |
+|          5 |                5 | Adobe on Almaden                              |  1667 | Subscriber      |
+|         62 |               62 | 2nd at Folsom                                 |  1582 | Customer        |
+|         49 |               49 | Spear at Folsom                               |  1574 | Customer        |
+|         16 |               16 | SJSU - San Salvador at 9th                    |  1539 | Subscriber      |
+|         14 |               14 | Arena Green / SAP Center                      |  1520 | Subscriber      |
+|         35 |               35 | University and Emerson                        |  1499 | Customer        |
+|         45 |               45 | Commercial at Montgomery                      |  1491 | Customer        |
+|         30 |               30 | Middlefield Light Rail Station                |  1464 | Subscriber      |
+|         42 |               42 | Davis at Jackson                              |  1448 | Customer        |
+|         59 |               59 | Golden Gate at Polk                           |  1397 | Customer        |
+|         55 |               55 | Temporary Transbay Terminal (Howard at Beale) |  1312 | Customer        |
+|         82 |               82 | Broadway St at Battery St                     |  1242 | Customer        |
+|          3 |                3 | San Jose Civic Center                         |  1176 | Customer        |
+
+
+ *SQL query:
+ 
+ ```
+  bq query --use_legacy_sql=false 'SELECT station_id, start_station_id, name, COUNT(*) AS Count, subscriber_type,  --end_station_name
+> FROM `bigquery-public-data.san_francisco.bikeshare_trips` AS bikeshare_trips
+> LEFT OUTER JOIN `bigquery-public-data.san_francisco.bikeshare_stations` AS bikeshare_stations
+> ON bikeshare_trips.start_station_id = bikeshare_stations.station_id
+> WHERE start_station_id = station_id
+> GROUP BY station_id, start_station_id, name, subscriber_type  --, end_station_name
+> ORDER BY Count DESC
+> LIMIT 100;'
+  ```
+  
+##### Question 4: How does bike rides vary by month?
+
+  **Answer: Most popular months are August, October, july while the months when we see least bikers are December, January and February. It can be because daily commuters to office via train-stations, ferry, etc. are fewer due to vacations.In order to increase sales, my recommendation would be to give some sort of discount in those months, so people bike more. For example, attract bikers to go on long duration leisure trips in those months. Although we are showing only one result we have experimented all the years individually.** 
+  
+  +-------+-------+
+| Count | month |
++-------+-------+
+| 95576 |     8 |
+| 94378 |    10 |
+| 91672 |     6 |
+| 89539 |     7 |
+| 87321 |     9 |
+| 86364 |     5 |
+| 84196 |     4 |
+| 81777 |     3 |
+| 73091 |    11 |
+| 71788 |     1 |
+| 69985 |     2 |
+| 57961 |    12 |
++-------+-------+
+  
+ *SQL query:
+ 
+ ```
+bq query --use_legacy_sql=false '#standardSQL
+> SELECT COUNT(trip_id) as Count,
+> EXTRACT (MONTH FROM start_date) AS month,
+> --EXTRACT (YEAR FROM start_date) AS year,
+> FROM `bigquery-public-data.san_francisco.bikeshare_trips` AS bikeshare_trips
+> --WHERE EXTRACT(YEAR FROM start_date) IN (2015) --(2013, 2014, 2015, 2016)
+> GROUP BY month --, year
+> ORDER BY Count DESC
+> --LIMIT 10;'
+```  
+
+##### Question 5: Which station id's have highest duration of bike rides and compare them with the trip counts with lower duration of bike rides?
+
+ **Answer: When we sort by duration, we see that the highest duration bike rides occured from the station id's 35, 36, 24 and so on, while the lowest duration bike rides occured from station id's. Another observation is when we order them by trip_count, we noticed that the highest trip_count station id's (for example 70, 69, 62 and so on) corrspond with lower duration times. This also validate that the same most popular station from Question 1 are mostly short duration ones. 
+  Later in Part 3 (in Project_1.ipynb), I have shown a plot of duration vs trip_count, which shows that short duration trips have higher counts on trips and the counts decline as duration increases. Here, I will recommend that if there are any higher duration trips closer to the popular stations, then the nearby bikers can ride bikes from that station and use them for shorted commute. I have also provided a map to locate the station id's in my Project_1.ipynb.**
+
++------------------+------------+--------------------+
+| start_station_id | trip_count | duration_sec_mean  |
++------------------+------------+--------------------+
+|               35 |       2002 |  6455.075924075927 |
+|               36 |       1418 | 4079.5698166431575 |
+|               24 |        272 | 3846.2426470588243 |
+|               38 |       1026 | 3784.5575048732953 |
+|                3 |       2137 |  3726.586803930739 |
+|               33 |       1514 | 3686.3626155878483 |
+|               26 |        463 | 2873.7796976241902 |
+|               34 |       3281 | 2711.1737275220926 |
+|               91 |         69 | 2595.6956521739125 |
+|               23 |        373 |  2347.705093833781 |
+
+
+|               51 |      21874 |   775.966352747554 |
+|               49 |      17062 |   773.159828859456 |
+|               45 |      16857 |  752.0938482529529 |
+|               61 |      39936 |  749.0779747596149 |
+|               63 |      20746 |  698.7669912272286 |
+|               69 |      56100 |  681.0883957219247 |
+|               65 |      34894 |  661.3232647446572 |
+|               64 |      26218 |  650.3902662293045 |
+|               55 |      39200 |  637.6137499999929 |
+|               62 |      23404 |  558.6935566569781 |
+|               90 |        173 |  554.8959537572254 |
++------------------+------------+--------------------+
+
+ *SQL query:
+ 
+ ```
+ SELECT start_station_id, count(*) AS trip_count, AVG(duration_sec) AS duration_sec_mean
+ FROM `bigquery-public-data.san_francisco.bikeshare_trips`
+ GROUP BY start_station_id
+ ORDER BY duration_sec_mean DESC 
+ LIMIT 1000
+
+```
 
 ## Part 3 - Employ notebooks to synthesize query project results
 
-### Get Going
 
-Create a Jupyter Notebook against a Python 3 kernel named Project_1.ipynb in the assignment branch of your repo.
-
-#### Run queries in the notebook 
-
-At the end of this document is an example Jupyter Notebook you can take a look at and run.  
-
-You can run queries using the "bang" command to shell out, such as this:
-
+ Here, I have created a Jupyter Notebook named Project_1.ipynb in the assignment branch of my repo.
+I ran the queries in the Notebook using the following commands and magic commands:
 ```
 ! bq query --use_legacy_sql=FALSE '<your-query-here>'
 ```
-
-- NOTE: 
-- Queries that return over 16K rows will not run this way, 
-- Run groupbys etc in the bq web interface and save that as a table in BQ. 
-- Max rows is defaulted to 100, use the command line parameter `--max_rows=1000000` to make it larger
-- Query those tables the same way as in `example.ipynb`
-
-Or you can use the magic commands, such as this:
-
 ```sql
 %%bigquery my_panda_data_frame
-
-select start_station_name, end_station_name
-from `bigquery-public-data.san_francisco.bikeshare_trips`
-where start_station_name <> end_station_name
-limit 10
 ```
 
-```python
-my_panda_data_frame
-```
+All my recommendations are at the end of my Project_1.ipynb. Also, I have added a map of San Francisco city using GeoPandas where I have marked the station_id's that are most popular.
 
-#### Report in the form of the Jupter Notebook named Project_1.ipynb
-
-- Using markdown cells, MUST definitively state and answer the two project questions:
-
-  * What are the 5 most popular trips that you would call "commuter trips"? 
+A summary of my __recommendations__ are:
+1. Some popular stations have higher availability of bikes and many of the bikers who ride to these popular stations are customers as opposed to subscribers. I would recommend that Lyft Bay Wheels offer some sort of deals like corporate membership or a free 30 min bike ride to whoever uses stations where bike availability if high (example station_id 62).
   
-  * What are your recommendations for offers (justify based on your findings)?
+2. The winter months have less bike rides. So Lyft Bay Wheels can offer special seasonal discounts in those months. 
 
-- For any temporary tables (or views) that you created, include the SQL in markdown cells
-
-- Use code cells for SQL you ran to load into Pandas, either using the !bq or the magic commands
-
-- Use code cells to create Pandas formatted output tables (at least 3) to present or support your findings
-
-- Use code cells to create simple data visualizations using Seaborn / Matplotlib (at least 2) to present or support your findings
-
-### Resource: see example .ipynb file 
-
-[Example Notebook](example.ipynb)
-
+3. The regions with long duration trips probably need more bike stations to make the durations shorter. This would increase the accessibility in those regions and drive up revenue.
